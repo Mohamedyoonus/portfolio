@@ -1,33 +1,39 @@
-import React, { useEffect, useRef } from 'react';
-import { Box, Typography, Button, Stack } from '@mui/material';
-import { useAnimation, motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Stars } from '@react-three/drei';
-import * as THREE from 'three';
+import React, { useEffect, useRef } from "react";
+import { Box, Typography, Button, Stack, useMediaQuery } from "@mui/material";
+import { useAnimation, motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Stars } from "@react-three/drei";
+import * as THREE from "three";
 
 // Floating 3D Particles
 const FloatingParticles = ({ count = 50 }) => {
   const particles = useRef();
   const particlesGeometry = new THREE.BufferGeometry();
   const particlesCnt = count;
-  
+
   const posArray = new Float32Array(particlesCnt * 3);
   const sizeArray = new Float32Array(particlesCnt);
   const colorArray = new Float32Array(particlesCnt * 3);
-  
-  for(let i = 0; i < particlesCnt * 3; i++) {
+
+  for (let i = 0; i < particlesCnt * 3; i++) {
     posArray[i] = (Math.random() - 0.5) * 10;
-    if(i % 3 === 0) {
-      sizeArray[i/3] = Math.random() * 0.5 + 0.1;
+    if (i % 3 === 0) {
+      sizeArray[i / 3] = Math.random() * 0.5 + 0.1;
     }
     colorArray[i] = Math.random() * 0.5 + 0.5;
   }
-  
-  particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-  particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
-  
+
+  particlesGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(posArray, 3)
+  );
+  particlesGeometry.setAttribute(
+    "color",
+    new THREE.BufferAttribute(colorArray, 3)
+  );
+
   useFrame((state) => {
     if (particles.current) {
       const time = state.clock.getElapsedTime();
@@ -39,9 +45,9 @@ const FloatingParticles = ({ count = 50 }) => {
   return (
     <points ref={particles}>
       <bufferGeometry attach="geometry" {...particlesGeometry} />
-      <pointsMaterial 
-        attach="material" 
-        size={0.1} 
+      <pointsMaterial
+        attach="material"
+        size={0.1}
         sizeAttenuation={true}
         alphaTest={0.01}
         transparent
@@ -56,16 +62,18 @@ const Header = () => {
   const controls = useAnimation();
   const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: false });
   const scrollDownRef = useRef();
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isSmallMobile = useMediaQuery("(max-width: 480px)");
 
   useEffect(() => {
-    controls.start(inView ? 'visible' : 'hidden');
+    controls.start(inView ? "visible" : "hidden");
   }, [controls, inView]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      scrollDownRef.current.style.transform = 'translateY(10px)';
+      scrollDownRef.current.style.transform = "translateY(10px)";
       setTimeout(() => {
-        scrollDownRef.current.style.transform = 'translateY(0)';
+        scrollDownRef.current.style.transform = "translateY(0)";
       }, 500);
     }, 1500);
     return () => clearInterval(interval);
@@ -84,29 +92,33 @@ const Header = () => {
     visible: {
       y: 0,
       opacity: 1,
-      transition: { type: 'spring', stiffness: 100, damping: 10 },
+      transition: {
+        type: "spring",
+        stiffness: isMobile ? 80 : 100,
+        damping: isMobile ? 15 : 10,
+      },
     },
   };
 
   const floatingVariants = {
     float: {
-      y: [0, -15, 0],
+      y: [0, isMobile ? -10 : -15, 0],
       rotate: [0, 5, -5, 0],
-      transition: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+      transition: { duration: 6, repeat: Infinity, ease: "easeInOut" },
     },
   };
 
   const textGlowVariants = {
-    hidden: { textShadow: '0 0 0px rgba(30, 144, 255, 0)' },
+    hidden: { textShadow: "0 0 0px rgba(30, 144, 255, 0)" },
     visible: {
       textShadow: [
-        '0 0 0px rgba(30, 144, 255, 0)',
-        '0 0 10px rgba(30, 144, 255, 0.5)',
-        '0 0 20px rgba(30, 144, 255, 0.3)',
-        '0 0 10px rgba(30, 144, 255, 0.5)',
-        '0 0 0px rgba(30, 144, 255, 0)',
+        "0 0 0px rgba(30, 144, 255, 0)",
+        "0 0 10px rgba(30, 144, 255, 0.5)",
+        "0 0 20px rgba(30, 144, 255, 0.3)",
+        "0 0 10px rgba(30, 144, 255, 0.5)",
+        "0 0 0px rgba(30, 144, 255, 0)",
       ],
-      transition: { duration: 8, repeat: Infinity, ease: 'easeInOut' },
+      transition: { duration: 8, repeat: Infinity, ease: "easeInOut" },
     },
   };
 
@@ -117,65 +129,65 @@ const Header = () => {
       ref={ref}
       sx={{
         flexGrow: 1,
-        bgcolor: '#000',
-        color: '#fff',
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        px: { xs: 4, sm: 6 },
-        position: 'relative',
-        overflow: 'hidden',
+        bgcolor: "#000",
+        color: "#fff",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        px: isSmallMobile ? 2 : isMobile ? 3 : 4,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
       {/* 3D Background Canvas with Particles Only */}
       <Canvas
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
-          width: '100%',
-          height: '100%',
+          width: "100%",
+          height: "100%",
           zIndex: 0,
-          opacity: 0.3,
+          opacity: isMobile ? 0.2 : 0.3,
         }}
         camera={{ position: [0, 0, 5], fov: 75 }}
       >
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
-        <FloatingParticles count={100} />
+        <FloatingParticles count={isMobile ? 50 : 100} />
       </Canvas>
 
       {/* Animated Floating Particles (2D) */}
-      {[...Array(30)].map((_, i) => {
-        const size = Math.random() * 8 + 2;
+      {[...Array(isMobile ? 15 : 30)].map((_, i) => {
+        const size = Math.random() * (isMobile ? 6 : 8) + 2;
         return (
           <motion.div
             key={i}
             style={{
-              position: 'absolute',
+              position: "absolute",
               width: `${size}px`,
               height: `${size}px`,
-              borderRadius: '50%',
+              borderRadius: "50%",
               background: `rgba(30, 144, 255, ${Math.random() * 0.5 + 0.2})`,
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               zIndex: 1,
-              filter: 'blur(1px)',
+              filter: "blur(1px)",
             }}
             animate={{
-              y: [0, (Math.random() - 0.5) * 200],
-              x: [0, (Math.random() - 0.5) * 150],
+              y: [0, (Math.random() - 0.5) * (isMobile ? 100 : 200)],
+              x: [0, (Math.random() - 0.5) * (isMobile ? 75 : 150)],
               opacity: [0.2, 0.8, 0.2],
               scale: [1, 1.5, 1],
             }}
             transition={{
               duration: Math.random() * 10 + 10,
               repeat: Infinity,
-              repeatType: 'reverse',
-              ease: 'easeInOut',
+              repeatType: "reverse",
+              ease: "easeInOut",
             }}
           />
         );
@@ -186,7 +198,13 @@ const Header = () => {
         initial="hidden"
         animate={controls}
         variants={containerVariants}
-        style={{ position: 'relative', zIndex: 2, maxWidth: '800px', width: '100%' }}
+        style={{
+          position: "relative",
+          zIndex: 2,
+          maxWidth: "800px",
+          width: "100%",
+          padding: isSmallMobile ? "0 0.5rem" : "0 1rem",
+        }}
       >
         <motion.div variants={itemVariants}>
           <Typography
@@ -196,12 +214,17 @@ const Header = () => {
             animate="visible"
             initial="hidden"
             sx={{
-              fontWeight: 'bold',
-              background: 'linear-gradient(90deg, #fff, #1e90ff)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              display: 'inline-block',
-              mb: 2,
+              fontWeight: "bold",
+              background: "linear-gradient(90deg, #fff, #1e90ff)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              display: "inline-block",
+              mb: isMobile ? 1 : 2,
+              fontSize: isSmallMobile
+                ? "1.5rem"
+                : isMobile
+                ? "1.75rem"
+                : "2.125rem",
             }}
           >
             hello!
@@ -212,26 +235,25 @@ const Header = () => {
           <Typography
             variant="h2"
             sx={{
-              fontWeight: 'bold',
-              fontSize: { xs: '2.8rem', sm: '4rem', md: '5rem' },
+              fontWeight: "bold",
+              fontSize: isSmallMobile ? "2.2rem" : isMobile ? "3rem" : "5rem",
               lineHeight: 1.1,
-              mb: 1,
-              position: 'relative',
-              display: 'inline-block',
+              mb: isMobile ? 0.5 : 1,
+              position: "relative",
+              display: "inline-block",
             }}
           >
-            I'm{' '}
+            I'm{" "}
             <motion.span
               style={{
-                color: '#1e90ff',
-                display: 'inline-block',
-                position: 'relative',
+                color: "#1e90ff",
+                display: "inline-block",
+                position: "relative",
               }}
               animate="float"
               variants={floatingVariants}
             >
               Yoonus
-              
             </motion.span>
           </Typography>
         </motion.div>
@@ -249,12 +271,16 @@ const Header = () => {
               repeat: Infinity,
             }}
             sx={{
-              color: '#1e90ff',
-              letterSpacing: 2,
-              fontSize: { xs: '1rem', sm: '1.25rem' },
-              textTransform: 'uppercase',
-              mb: 4,
-              display: 'inline-block',
+              color: "#1e90ff",
+              letterSpacing: isMobile ? 1 : 2,
+              fontSize: isSmallMobile
+                ? "0.9rem"
+                : isMobile
+                ? "1rem"
+                : "1.25rem",
+              textTransform: "uppercase",
+              mb: isMobile ? 3 : 4,
+              display: "inline-block",
             }}
           >
             Web Developer & Designer
@@ -273,32 +299,34 @@ const Header = () => {
               repeat: Infinity,
             }}
             sx={{
-              maxWidth: '600px',
-              mx: 'auto',
-              fontSize: { xs: '1rem', sm: '1.1rem' },
+              maxWidth: "600px",
+              mx: "auto",
+              fontSize: isSmallMobile ? "0.9rem" : isMobile ? "1rem" : "1.1rem",
               lineHeight: 1.7,
-              mb: 4,
-              color: 'rgba(255,255,255,0.8)',
-              position: 'relative',
+              mb: isMobile ? 3 : 4,
+              color: "rgba(255,255,255,0.8)",
+              position: "relative",
             }}
           >
-            Crafting digital experiences with clean code and creative design. Specializing in
-            modern web technologies to build fast, responsive, and user-friendly applications.
+            Crafting digital experiences with clean code and creative design.
+            Specializing in modern web technologies to build fast, responsive,
+            and user-friendly applications.
             <motion.span
               style={{
-                position: 'absolute',
+                position: "absolute",
                 bottom: 0,
                 left: 0,
-                width: '100%',
-                height: '1px',
-                background: 'linear-gradient(90deg, transparent, rgba(30,144,255,0.5), transparent)',
+                width: "100%",
+                height: "1px",
+                background:
+                  "linear-gradient(90deg, transparent, rgba(30,144,255,0.5), transparent)",
               }}
               animate={{
                 background: [
-                  'linear-gradient(90deg, transparent, rgba(30,144,255,0.5), transparent)',
-                  'linear-gradient(90deg, transparent, rgba(0,206,201,0.5), transparent)',
-                  'linear-gradient(90deg, transparent, rgba(108,92,231,0.5), transparent)',
-                  'linear-gradient(90deg, transparent, rgba(30,144,255,0.5), transparent)',
+                  "linear-gradient(90deg, transparent, rgba(30,144,255,0.5), transparent)",
+                  "linear-gradient(90deg, transparent, rgba(0,206,201,0.5), transparent)",
+                  "linear-gradient(90deg, transparent, rgba(108,92,231,0.5), transparent)",
+                  "linear-gradient(90deg, transparent, rgba(30,144,255,0.5), transparent)",
                 ],
               }}
               transition={{
@@ -312,165 +340,180 @@ const Header = () => {
         {/* CTA Buttons */}
         <motion.div variants={itemVariants}>
           <Stack
-  direction={{ xs: 'row', sm: 'row' }}  // Changed xs to 'row' to make them side by side on all screens
-  spacing={{ xs: 2, sm: 3 }}  // Adjusted spacing for mobile
-  justifyContent="center"
-  sx={{ 
-    mb: 6,
-    flexWrap: 'wrap',  // Allows buttons to wrap if needed
-    '& .MuiButton-root': {  // Ensures buttons don't get too small on mobile
-      minWidth: { xs: '140px', sm: 'auto' },
-      fontSize: { xs: '0.875rem', sm: '1rem' },
-      px: { xs: 3, sm: 5 },
-    }
-  }}
->
-  {/* Primary Button */}
-  <MotionButton
-    component={motion.a}
-    href="/projects"
-    size="large"
-    whileHover={{ 
-      scale: 1.08,
-      boxShadow: '0 0 20px rgba(30,144,255,0.8)'
-    }}
-    whileTap={{ scale: 0.98 }}
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ 
-      opacity: 1, 
-      y: 0,
-      boxShadow: '0 8px 20px rgba(30,144,255,0.4)'
-    }}
-    transition={{ duration: 0.6, delay: 0.3 }}
-    variant="contained"
-    sx={{
-      background: 'linear-gradient(90deg, #1e90ff, #00bcd4)',
-      color: '#fff',
-      py: 1.5,
-      borderRadius: '999px',
-      fontWeight: 'bold',
-      textTransform: 'uppercase',
-      position: 'relative',
-      overflow: 'hidden',
-      '&::after': {
-        content: '""',
-        position: 'absolute',
-        top: '-50%',
-        left: '-60%',
-        width: '200%',
-        height: '200%',
-        background: 'linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0))',
-        transform: 'rotate(30deg)',
-        transition: 'left 0.6s ease-in-out',
-      },
-      '&:hover::after': {
-        left: '100%',
-      },
-    }}
-  >
-    View My Work
-  </MotionButton>
+            direction="row" // Always row direction
+            spacing={isMobile ? 1 : 3} // Smaller spacing on mobile
+            justifyContent="center"
+            sx={{
+              mb: isMobile ? 4 : 6,
+              flexWrap: "wrap", // Allow wrapping if needed
+              "& .MuiButton-root": {
+                minWidth: isSmallMobile
+                  ? "calc(50% - 8px)"
+                  : isMobile
+                  ? "140px"
+                  : "auto",
+                fontSize: isSmallMobile
+                  ? "0.8rem"
+                  : isMobile
+                  ? "0.9rem"
+                  : "1rem",
+                px: isSmallMobile ? 1 : isMobile ? 2 : 5,
+                py: isMobile ? 1 : 1.5,
+                mx: isSmallMobile ? "4px" : 0, // Small margin on very small screens
+              },
+            }}
+          >
+            {/* Primary Button */}
+            <MotionButton
+              component={motion.a}
+              href="/projects"
+              size="large"
+              whileHover={{
+                scale: isMobile ? 1.03 : 1.08,
+                boxShadow: "0 0 20px rgba(30,144,255,0.8)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                boxShadow: "0 8px 20px rgba(30,144,255,0.4)",
+              }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              variant="contained"
+              sx={{
+                background: "linear-gradient(90deg, #1e90ff, #00bcd4)",
+                color: "#fff",
+                borderRadius: "999px",
+                fontWeight: "bold",
+                textTransform: "uppercase",
+                position: "relative",
+                overflow: "hidden",
+                flex: isSmallMobile ? 1 : "none", // Take equal space on very small screens
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  top: "-50%",
+                  left: "-60%",
+                  width: "200%",
+                  height: "200%",
+                  background:
+                    "linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0))",
+                  transform: "rotate(30deg)",
+                  transition: "left 0.6s ease-in-out",
+                },
+                "&:hover::after": {
+                  left: "100%",
+                },
+              }}
+            >
+              View My Work
+            </MotionButton>
 
-  {/* Outlined Button with Border Animation */}
-  <MotionButton
-    component={motion.a}
-    href="/contact"
-    size="large"
-    whileHover={{ 
-      scale: 1.08,
-      boxShadow: '0 0 15px rgba(0,206,201,0.5)'
-    }}
-    whileTap={{ scale: 0.98 }}
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, delay: 0.4 }}
-    variant="outlined"
-    sx={{
-      position: 'relative',
-      py: 1.5,
-      borderRadius: '999px',
-      color: '#1e90ff',
-      borderColor: '#1e90ff',
-      fontWeight: 'bold',
-      textTransform: 'uppercase',
-      overflow: 'hidden',
-      zIndex: 1,
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: '-100%',
-        width: '200%',
-        height: '100%',
-        background: 'linear-gradient(120deg, transparent, rgba(30,144,255,0.2), transparent)',
-        transition: 'left 0.6s ease-in-out',
-        zIndex: -1
-      },
-      '&:hover::before': {
-        left: '100%'
-      },
-      '&:hover': {
-        borderColor: '#00bcd4',
-        color: '#00bcd4',
-        '&::after': {
-          opacity: 1
-        }
-      },
-      '&::after': {
-        content: '""',
-        position: 'absolute',
-        top: '-2px',
-        left: '-2px',
-        right: '-2px',
-        bottom: '-2px',
-        borderRadius: '999px',
-        background: 'linear-gradient(90deg, #1e90ff, #00cec9, #6c5ce7)',
-        zIndex: -2,
-        opacity: 0,
-        transition: 'opacity 0.3s ease'
-      }
-    }}
-  >
-    Contact Me
-  </MotionButton>
-</Stack>
+            {/* Outlined Button with Border Animation */}
+            <MotionButton
+              component={motion.a}
+              href="/contact"
+              size="large"
+              whileHover={{
+                scale: isMobile ? 1.03 : 1.08,
+                boxShadow: "0 0 15px rgba(0,206,201,0.5)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              variant="outlined"
+              sx={{
+                position: "relative",
+                borderRadius: "999px",
+                color: "#1e90ff",
+                borderColor: "#1e90ff",
+                fontWeight: "bold",
+                textTransform: "uppercase",
+                overflow: "hidden",
+                zIndex: 1,
+                flex: isSmallMobile ? 1 : "none", // Take equal space on very small screens
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: "-100%",
+                  width: "200%",
+                  height: "100%",
+                  background:
+                    "linear-gradient(120deg, transparent, rgba(30,144,255,0.2), transparent)",
+                  transition: "left 0.6s ease-in-out",
+                  zIndex: -1,
+                },
+                "&:hover::before": {
+                  left: "100%",
+                },
+                "&:hover": {
+                  borderColor: "#00bcd4",
+                  color: "#00bcd4",
+                  "&::after": {
+                    opacity: 1,
+                  },
+                },
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  top: "-2px",
+                  left: "-2px",
+                  right: "-2px",
+                  bottom: "-2px",
+                  borderRadius: "999px",
+                  background:
+                    "linear-gradient(90deg, #1e90ff, #00cec9, #6c5ce7)",
+                  zIndex: -2,
+                  opacity: 0,
+                  transition: "opacity 0.3s ease",
+                },
+              }}
+            >
+              Contact Me
+            </MotionButton>
+          </Stack>
         </motion.div>
       </motion.div>
 
       {/* Scroll Down Icon with Animation */}
       <motion.div
         ref={scrollDownRef}
-        animate={{ 
+        animate={{
           y: [0, 15, 0],
-          opacity: [0.6, 1, 0.6]
+          opacity: [0.6, 1, 0.6],
         }}
-        transition={{ 
-          duration: 1.5, 
+        transition={{
+          duration: 1.5,
           repeat: Infinity,
-          ease: 'easeInOut'
+          ease: "easeInOut",
         }}
         style={{
-          position: 'absolute',
-          bottom: 40,
+          position: "absolute",
+          bottom: isMobile ? 30 : 40,
           zIndex: 2,
-          color: '#1e90ff',
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          color: "#1e90ff",
+          cursor: "pointer",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
-        onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+        onClick={() =>
+          window.scrollTo({ top: window.innerHeight, behavior: "smooth" })
+        }
       >
-        <KeyboardArrowDownIcon fontSize="large" />
+        <KeyboardArrowDownIcon fontSize={isMobile ? "medium" : "large"} />
         <motion.div
           style={{
-            width: '2px',
-            height: '40px',
-            background: 'linear-gradient(to bottom, #1e90ff, transparent)',
-            marginTop: '8px',
+            width: "2px",
+            height: isMobile ? "30px" : "40px",
+            background: "linear-gradient(to bottom, #1e90ff, transparent)",
+            marginTop: "8px",
           }}
           animate={{
-            height: ['0px', '40px', '0px'],
+            height: ["0px", isMobile ? "30px" : "40px", "0px"],
             opacity: [0, 1, 0],
           }}
           transition={{

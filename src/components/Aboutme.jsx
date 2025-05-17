@@ -12,6 +12,7 @@ import {
   Paper,
   Chip,
   IconButton,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Code,
@@ -61,6 +62,7 @@ const GlowCard = styled(Paper)(({ theme, glowcolor }) => ({
 
 const Aboutme = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // Enhanced color palette
   const colors = {
@@ -101,15 +103,13 @@ const Aboutme = () => {
     ],
   };
 
-  
-
   // Skill category component
   const SkillCategory = ({ title, icon, skills, color }) => (
     <GlowCard
       glowcolor={color}
       sx={{
         mb: 3,
-        p: 3,
+        p: isMobile ? 2 : 3,
         backgroundColor: "#121212",
         borderRadius: 4,
         boxShadow: `0 4px 20px ${alpha(color, 0.1)}`,
@@ -117,7 +117,7 @@ const Aboutme = () => {
         border: `1px solid ${alpha(color, 0.2)}`,
         transition: "all 0.3s ease",
         "&:hover": {
-          transform: "translateY(-5px)",
+          transform: isMobile ? "none" : "translateY(-5px)",
           boxShadow: `0 8px 30px ${alpha(color, 0.3)}`,
           border: `1px solid ${alpha(color, 0.4)}`,
         },
@@ -134,6 +134,7 @@ const Aboutme = () => {
           color: color,
           fontWeight: 600,
           textAlign: "center",
+          fontSize: isMobile ? "1rem" : "1.25rem",
         }}
       >
         {icon} {title}
@@ -162,12 +163,22 @@ const Aboutme = () => {
                   </Typography>
                   <Typography
                     variant="body2"
-                    sx={{ fontWeight: 500, color: "#e0e0e0" }}
+                    sx={{ 
+                      fontWeight: 500, 
+                      color: "#e0e0e0",
+                      fontSize: isMobile ? "0.8rem" : "0.875rem"
+                    }}
                   >
                     {skill.name}
                   </Typography>
                 </Box>
-                <Typography variant="body2" sx={{ color: "#aaa" }}>
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    color: "#aaa",
+                    fontSize: isMobile ? "0.8rem" : "0.875rem"
+                  }}
+                >
                   {skill.level}%
                 </Typography>
               </Box>
@@ -195,12 +206,11 @@ const Aboutme = () => {
     </GlowCard>
   );
 
-
   return (
     <Box
       id="about"
       sx={{
-        py: 10,
+        py: isMobile ? 6 : 10,
         px: { xs: 2, sm: 4, md: 6 },
         background:
           "radial-gradient(circle at 10% 20%, #0a0a0a 0%, #000000 90%)",
@@ -211,7 +221,7 @@ const Aboutme = () => {
       }}
     >
       {/* Animated background elements */}
-      {[...Array(20)].map((_, i) => (
+      {[...Array(isMobile ? 10 : 20)].map((_, i) => (
         <motion.div
           key={i}
           style={{
@@ -243,53 +253,57 @@ const Aboutme = () => {
       ))}
 
       {/* Floating shapes */}
-      <motion.div
-        style={{
-          position: "absolute",
-          top: "15%",
-          left: "5%",
-          width: "150px",
-          height: "150px",
-          borderRadius: "30% 70% 70% 30% / 30% 30% 70% 70%",
-          background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
-          opacity: 0.1,
-          filter: "blur(20px)",
-        }}
-        animate={{
-          y: [-20, 20],
-          x: [-10, 10],
-          transition: {
-            duration: 8,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut",
-          },
-        }}
-      />
+      {!isMobile && (
+        <>
+          <motion.div
+            style={{
+              position: "absolute",
+              top: "15%",
+              left: "5%",
+              width: "150px",
+              height: "150px",
+              borderRadius: "30% 70% 70% 30% / 30% 30% 70% 70%",
+              background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
+              opacity: 0.1,
+              filter: "blur(20px)",
+            }}
+            animate={{
+              y: [-20, 20],
+              x: [-10, 10],
+              transition: {
+                duration: 8,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut",
+              },
+            }}
+          />
 
-      <motion.div
-        style={{
-          position: "absolute",
-          bottom: "20%",
-          right: "10%",
-          width: "200px",
-          height: "200px",
-          borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
-          background: `linear-gradient(45deg, ${colors.accent}, ${colors.primary})`,
-          opacity: 0.1,
-          filter: "blur(25px)",
-        }}
-        animate={{
-          y: [-30, 30],
-          x: [-15, 15],
-          transition: {
-            duration: 10,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut",
-          },
-        }}
-      />
+          <motion.div
+            style={{
+              position: "absolute",
+              bottom: "20%",
+              right: "10%",
+              width: "200px",
+              height: "200px",
+              borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%",
+              background: `linear-gradient(45deg, ${colors.accent}, ${colors.primary})`,
+              opacity: 0.1,
+              filter: "blur(25px)",
+            }}
+            animate={{
+              y: [-30, 30],
+              x: [-15, 15],
+              transition: {
+                duration: 10,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut",
+              },
+            }}
+          />
+        </>
+      )}
 
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
         {/* Header Section */}
@@ -299,7 +313,7 @@ const Aboutme = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <Box sx={{ mb: 8 }}>
+          <Box sx={{ mb: isMobile ? 4 : 8 }}>
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -334,7 +348,7 @@ const Aboutme = () => {
                 sx={{
                   fontWeight: 800,
                   mb: 2,
-                  fontSize: { xs: "2.5rem", md: "3.5rem" },
+                  fontSize: isMobile ? "2rem" : { xs: "2.5rem", md: "3.5rem" },
                   background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary}, ${colors.accent})`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -373,7 +387,7 @@ const Aboutme = () => {
         </motion.div>
 
         {/* MARK:Profile Section */}
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 8 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: isMobile ? 4 : 8 }}>
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -384,7 +398,7 @@ const Aboutme = () => {
             <GlowCard
               glowcolor={colors.primary}
               sx={{
-                p: { xs: 3, md: 4 },
+                p: isMobile ? 2 : { xs: 3, md: 4 },
                 backgroundColor: alpha("#121212", 0.8),
                 borderRadius: 4,
                 boxShadow: `0 8px 32px ${alpha(colors.primary, 0.2)}`,
@@ -397,28 +411,30 @@ const Aboutme = () => {
               }}
             >
               {/* Animated background pattern */}
-              <motion.div
-                animate={{
-                  rotate: [0, 360],
-                  transition: {
-                    duration: 30,
-                    repeat: Infinity,
-                    ease: "linear",
-                  },
-                }}
-                style={{
-                  position: "absolute",
-                  top: "-50%",
-                  left: "-50%",
-                  width: "200%",
-                  height: "200%",
-                  background: `conic-gradient(from 0deg, transparent 0%, ${alpha(
-                    colors.secondary,
-                    0.05
-                  )} 10%, transparent 20%)`,
-                  zIndex: 0,
-                }}
-              />
+              {!isMobile && (
+                <motion.div
+                  animate={{
+                    rotate: [0, 360],
+                    transition: {
+                      duration: 30,
+                      repeat: Infinity,
+                      ease: "linear",
+                    },
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: "-50%",
+                    left: "-50%",
+                    width: "200%",
+                    height: "200%",
+                    background: `conic-gradient(from 0deg, transparent 0%, ${alpha(
+                      colors.secondary,
+                      0.05
+                    )} 10%, transparent 20%)`,
+                    zIndex: 0,
+                  }}
+                />
+              )}
 
               <Box sx={{ position: "relative", zIndex: 1 }}>
                 <Box
@@ -426,13 +442,13 @@ const Aboutme = () => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    mb: 4,
+                    mb: isMobile ? 2 : 4,
                   }}
                 >
                   <Box
                     sx={{
                       position: "relative",
-                      mb: 3,
+                      mb: isMobile ? 1 : 3,
                       "&::before, &::after": {
                         content: '""',
                         position: "absolute",
@@ -469,8 +485,8 @@ const Aboutme = () => {
                         src="/yass.jpg"
                         alt="Profile"
                         sx={{
-                          width: 180,
-                          height: 180,
+                          width: isMobile ? 120 : 180,
+                          height: isMobile ? 120 : 180,
                           border: `4px solid ${colors.primary}`,
                           boxShadow: `0 10px 30px ${alpha(
                             colors.primary,
@@ -488,6 +504,7 @@ const Aboutme = () => {
                     sx={{
                       fontWeight: 700,
                       mb: 1,
+                      fontSize: isMobile ? "1.5rem" : "2.125rem",
                       background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
@@ -501,7 +518,7 @@ const Aboutme = () => {
                       variant="subtitle1"
                       sx={{
                         color: colors.secondary,
-                        fontSize: "1rem",
+                        fontSize: isMobile ? "0.9rem" : "1rem",
                         fontWeight: 500,
                       }}
                     >
@@ -522,8 +539,9 @@ const Aboutme = () => {
                             backgroundColor: alpha("#0077b5", 0.2),
                           },
                         }}
+                        size={isMobile ? "small" : "medium"}
                       >
-                        <LinkedIn />
+                        <LinkedIn fontSize={isMobile ? "small" : "medium"} />
                       </IconButton>
                     </motion.div>
 
@@ -538,8 +556,9 @@ const Aboutme = () => {
                             backgroundColor: alpha("#333", 0.2),
                           },
                         }}
+                        size={isMobile ? "small" : "medium"}
                       >
-                        <GitHub />
+                        <GitHub fontSize={isMobile ? "small" : "medium"} />
                       </IconButton>
                     </motion.div>
 
@@ -553,8 +572,9 @@ const Aboutme = () => {
                             backgroundColor: alpha(colors.accent, 0.2),
                           },
                         }}
+                        size={isMobile ? "small" : "medium"}
                       >
-                        <Email />
+                        <Email fontSize={isMobile ? "small" : "medium"} />
                       </IconButton>
                     </motion.div>
                   </Box>
@@ -563,20 +583,21 @@ const Aboutme = () => {
                 <Typography
                   variant="h5"
                   sx={{
-                    mb: 3,
+                    mb: isMobile ? 1 : 3,
                     fontWeight: 700,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 1.5,
                     color: colors.primary,
+                    fontSize: isMobile ? "1.25rem" : "1.5rem",
                   }}
                 >
                   <Box
                     component="span"
                     sx={{
-                      width: 12,
-                      height: 12,
+                      width: isMobile ? 8 : 12,
+                      height: isMobile ? 8 : 12,
                       borderRadius: "50%",
                       background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
                       boxShadow: `0 0 10px ${colors.primary}`,
@@ -590,7 +611,7 @@ const Aboutme = () => {
                   sx={{
                     mb: 2,
                     lineHeight: 1.9,
-                    fontSize: "1.05rem",
+                    fontSize: isMobile ? "0.95rem" : "1.05rem",
                     color: "#e0e0e0",
                     textAlign: "left",
                   }}
@@ -619,24 +640,7 @@ const Aboutme = () => {
                     {" "}
                     high-performance applications
                   </Box>{" "}
-                  with clean architecture and intuitive user interfaces. My
-                  technical toolkit includes React, Node.js, Express, MongoDB,
-                  and modern CSS frameworks. I've delivered full-stack solutions
-                  for clients as a
-                  <Box component="span" sx={{ fontWeight: 600 }}>
-                    {" "}
-                    freelancer
-                  </Box>
-                  , focusing on performance, clean UI/UX, and scalability. I
-                  enjoy exploring new technologies, contributing to
-                  <Box
-                    component="span"
-                    sx={{ color: colors.success, fontWeight: 600 }}
-                  >
-                    {" "}
-                    open-source projects
-                  </Box>
-                  , and learning through real-world challenges.
+                  with clean architecture and intuitive user interfaces.
                 </Typography>
               </Box>
             </GlowCard>
@@ -644,7 +648,7 @@ const Aboutme = () => {
         </Box>
 
         {/* MARK:Skills Section */}
-        <Box sx={{ mb: 8 }}>
+        <Box sx={{ mb: isMobile ? 4 : 8 }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -653,47 +657,48 @@ const Aboutme = () => {
             <Typography
               variant="h4"
               sx={{
-                mb: 4,
+                mb: isMobile ? 2 : 4,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 1,
                 color: colors.primary,
+                fontSize: isMobile ? "1.5rem" : "2.125rem",
               }}
             >
-              <Code fontSize="large" />
+              <Code fontSize={isMobile ? "medium" : "large"} />
               Skills & Expertise
             </Typography>
           </motion.div>
 
-          <Grid container justifyContent="center" spacing={3}>
+          <Grid container justifyContent="center" spacing={isMobile ? 2 : 3}>
             {[
               {
-                title: "Frontend ",
+                title: "Frontend",
                 icon: <Code sx={{ color: colors.primary }} />,
                 skills: skills.frontend,
                 color: colors.primary,
               },
               {
-                title: "Backend ",
+                title: "Backend",
                 icon: <Storage sx={{ color: colors.secondary }} />,
                 skills: skills.backend,
                 color: colors.secondary,
               },
               {
-                title: "UI/UX ",
+                title: "UI/UX",
                 icon: <DesignServices sx={{ color: colors.accent }} />,
                 skills: skills.design,
                 color: colors.accent,
               },
               {
-                title: "Tools & Databases",
+                title: "Tools & DB",
                 icon: <Terminal sx={{ color: "#9575cd" }} />,
                 skills: skills.tools,
                 color: "#9575cd",
               },
             ].map((category, index) => (
-              <Grid item xs={12} sm={6} md={6} lg={3} key={index}>
+              <Grid item xs={6} sm={6} md={6} lg={3} key={index}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -712,7 +717,7 @@ const Aboutme = () => {
         </Box>
 
         {/* MARK:Fun Facts Section */}
-        <Box sx={{ mb: 8 }}>
+        <Box sx={{ mb: isMobile ? 4 : 8 }}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -721,44 +726,44 @@ const Aboutme = () => {
             <Typography
               variant="h4"
               sx={{
-                mb: 4,
+                mb: isMobile ? 2 : 4,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 1,
                 color: colors.accent,
+                fontSize: isMobile ? "1.5rem" : "2.125rem",
               }}
             >
-              <Star fontSize="large" />
+              <Star fontSize={isMobile ? "medium" : "large"} />
               Fun Facts
             </Typography>
           </motion.div>
 
-          <Grid container spacing={3} justifyContent="center">
+          <Grid container spacing={isMobile ? 2 : 3} justifyContent="center">
             {[
               {
-                text: "5+ Projects Completed",
+                text: "5+ Projects",
                 color: colors.primary,
                 icon: <Code sx={{ color: "#fff" }} />,
               },
               {
-                text: "5+ Happy Clients",
+                text: "5+ Clients",
                 color: colors.secondary,
                 icon: <Favorite sx={{ color: "#fff" }} />,
               },
-
               {
-                text: "500+ Hours Coding",
+                text: "500+ Hours",
                 color: "#9575cd",
                 icon: <Terminal sx={{ color: "#fff" }} />,
               },
             ].map((fact, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
-                <motion.div whileHover={{ y: -5 }} whileTap={{ scale: 0.98 }}>
+              <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
+                <motion.div whileHover={{ y: isMobile ? 0 : -5 }} whileTap={{ scale: 0.98 }}>
                   <GlowCard
                     glowcolor={fact.color}
                     sx={{
-                      p: 3,
+                      p: isMobile ? 1.5 : 3,
                       backgroundColor: "#121212",
                       borderRadius: 3,
                       border: `1px solid ${alpha(fact.color, 0.2)}`,
@@ -772,8 +777,8 @@ const Aboutme = () => {
                   >
                     <Box
                       sx={{
-                        width: 60,
-                        height: 60,
+                        width: isMobile ? 40 : 60,
+                        height: isMobile ? 40 : 60,
                         borderRadius: "50%",
                         display: "flex",
                         alignItems: "center",
@@ -781,14 +786,20 @@ const Aboutme = () => {
                         background: `linear-gradient(135deg, ${
                           fact.color
                         }, ${alpha(fact.color, 0.7)})`,
-                        mb: 2,
+                        mb: isMobile ? 1 : 2,
                       }}
                     >
-                      {fact.icon}
+                      {React.cloneElement(fact.icon, {
+                        fontSize: isMobile ? "small" : "medium"
+                      })}
                     </Box>
                     <Typography
                       variant="h6"
-                      sx={{ fontWeight: 600, color: "#fff" }}
+                      sx={{ 
+                        fontWeight: 600, 
+                        color: "#fff",
+                        fontSize: isMobile ? "0.9rem" : "1.25rem"
+                      }}
                     >
                       {fact.text}
                     </Typography>

@@ -2,10 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { Code, Visibility, GitHub, OpenInNew } from '@mui/icons-material';
+import { useMediaQuery } from '@mui/material';
 
 // Styled components
 const ProjectsContainer = styled(motion.div)`
-  padding: 4rem 2rem;
+  padding: ${props => props.isMobile ? '2rem 1rem' : '4rem 2rem'};
   max-width: 1400px;
   margin: 0 auto;
   background-color: #0a0a0a;
@@ -25,9 +26,9 @@ const ProjectsContainer = styled(motion.div)`
 `;
 
 const SectionTitle = styled(motion.h1)`
-  font-size: 3rem;
+  font-size: ${props => props.isMobile ? '2rem' : '3rem'};
   color: white;
-  margin-bottom: 3rem;
+  margin-bottom: ${props => props.isMobile ? '1.5rem' : '3rem'};
   text-align: center;
   position: relative;
   z-index: 1;
@@ -35,52 +36,54 @@ const SectionTitle = styled(motion.h1)`
   &::after {
     content: '';
     position: absolute;
-    bottom: -15px;
+    bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 150px;
-    height: 4px;
+    width: ${props => props.isMobile ? '100px' : '150px'};
+    height: 3px;
     background: linear-gradient(90deg, #0076D6, #00B4D8);
     border-radius: 2px;
   }
 `;
 
 const SectionSubtitle = styled(motion.p)`
-  font-size: 1.2rem;
+  font-size: ${props => props.isMobile ? '1rem' : '1.2rem'};
   color: #a0a0a0;
   text-align: center;
   max-width: 700px;
-  margin: 0 auto 3rem;
+  margin: 0 auto ${props => props.isMobile ? '1.5rem' : '3rem'};
   line-height: 1.6;
+  padding: ${props => props.isMobile ? '0 1rem' : '0'};
   z-index: 1;
 `;
 
 const ProjectsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2.5rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(${props => props.isMobile ? '280px' : '350px'}, 1fr));
+  gap: ${props => props.isMobile ? '1.5rem' : '2.5rem'};
+  margin-top: ${props => props.isMobile ? '1rem' : '2rem'};
   position: relative;
   z-index: 1;
+  padding: ${props => props.isMobile ? '0 0.5rem' : '0'};
 `;
 
 const ProjectCard = styled(motion.div)`
   background: #121212;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
   border: 1px solid #1e1e1e;
   
   &:hover {
-    transform: translateY(-10px);
+    transform: translateY(${props => props.isMobile ? '0' : '-10px'});
     box-shadow: 0 15px 40px rgba(0, 118, 210, 0.2);
     border-color: #0076D6;
   }
 `;
 
 const ProjectImage = styled.div`
-  height: 220px;
+  height: ${props => props.isMobile ? '180px' : '220px'};
   position: relative;
   overflow: hidden;
   display: flex;
@@ -95,17 +98,17 @@ const ProjectImage = styled.div`
   }
 
   &:hover img {
-    transform: scale(1.05);
+    transform: scale(${props => props.isMobile ? '1' : '1.05'});
   }
 `;
 
 const ProjectContent = styled.div`
-  padding: 1.8rem;
+  padding: ${props => props.isMobile ? '1.2rem' : '1.8rem'};
 `;
 
 const ProjectTitle = styled.h3`
-  font-size: 1.6rem;
-  margin-bottom: 0.8rem;
+  font-size: ${props => props.isMobile ? '1.3rem' : '1.6rem'};
+  margin-bottom: 0.6rem;
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -114,50 +117,50 @@ const ProjectTitle = styled.h3`
 
 const ProjectDescription = styled.p`
   color: #b0b0b0;
-  margin-bottom: 1.5rem;
+  margin-bottom: ${props => props.isMobile ? '1rem' : '1.5rem'};
   line-height: 1.6;
-  font-size: 1rem;
+  font-size: ${props => props.isMobile ? '0.9rem' : '1rem'};
 `;
 
 const ProjectTags = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-bottom: 1.5rem;
+  gap: 0.6rem;
+  margin-bottom: ${props => props.isMobile ? '1rem' : '1.5rem'};
 `;
 
 const Tag = styled.span`
   background: rgba(0, 118, 210, 0.2);
   color: #4fc3f7;
-  padding: 0.4rem 1rem;
+  padding: 0.3rem 0.8rem;
   border-radius: 6px;
-  font-size: 0.85rem;
+  font-size: ${props => props.isMobile ? '0.75rem' : '0.85rem'};
   font-weight: 500;
   border: 1px solid rgba(0, 180, 216, 0.3);
 `;
 
 const ProjectLinks = styled.div`
   display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: ${props => props.isMobile ? '0.8rem' : '1rem'};
+  margin-top: ${props => props.isMobile ? '1rem' : '1.5rem'};
 `;
 
 const ProjectLink = styled.a`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
+  gap: 0.4rem;
+  padding: ${props => props.isMobile ? '0.5rem 0.8rem' : '0.6rem 1.2rem'};
   background: ${props => props.variant === 'primary' ? 'linear-gradient(135deg, #0076D6, #00B4D8)' : 'transparent'};
   color: ${props => props.variant === 'primary' ? 'white' : '#4fc3f7'};
   border-radius: 6px;
-  font-size: 0.9rem;
+  font-size: ${props => props.isMobile ? '0.8rem' : '0.9rem'};
   font-weight: 500;
   text-decoration: none;
   transition: all 0.3s ease;
   border: ${props => props.variant === 'secondary' ? '1px solid #0076D6' : 'none'};
   
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(${props => props.isMobile ? '0' : '-2px'});
     box-shadow: ${props => props.variant === 'primary' ? '0 5px 15px rgba(0, 118, 210, 0.4)' : 'none'};
     background: ${props => props.variant === 'secondary' ? 'rgba(0, 118, 210, 0.1)' : ''};
   }
@@ -165,24 +168,24 @@ const ProjectLink = styled.a`
 
 const ViewMore = styled(motion.div)`
   text-align: center;
-  margin-top: 4rem;
+  margin-top: ${props => props.isMobile ? '2.5rem' : '4rem'};
   position: relative;
   z-index: 1;
 `;
 
 const ViewMoreButton = styled(motion.button)`
-  padding: 1rem 2.5rem;
+  padding: ${props => props.isMobile ? '0.8rem 1.8rem' : '1rem 2.5rem'};
   background: linear-gradient(135deg, #0076D6, #00B4D8);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1.1rem;
+  font-size: ${props => props.isMobile ? '1rem' : '1.1rem'};
   font-weight: 600;
   cursor: pointer;
   outline: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.6rem;
   box-shadow: 0 4px 20px rgba(0, 118, 210, 0.3);
   
   &:hover {
@@ -223,23 +226,22 @@ const projects = [
     id: 4,
     title: "Live_chat_App",
     description: "A full-stack real-time chat application built with a separate frontend and backend structure for scalable messaging.",
-
     tags: ["JavaScript", "Socket.io", "node.js","react","mongodb"],
     demoUrl: "https://chat-app-4lju.vercel.app/login",
     codeUrl: "https://github.com/Mohamedyoonus/chat_app",
     imageUrl: "./chat.png"
   },
-   {
-    id: 3,
+  {
+    id: 5,
     title: "Empty Box",
-  description: "demo",
+    description: "demo",
     tags: ["demo"],
     demoUrl: "https://shopy-olive.vercel.app/",
     codeUrl: "https://github.com/Mohamedyoonus/E-com_Web",
     imageUrl: "./shopy.png"
   },
-   {
-    id: 1,
+  {
+    id: 6,
     title: "Empty Box",
     description: "demo",
     tags: ["demo"],
@@ -273,12 +275,15 @@ const itemVariants = {
 };
 
 const Projects = () => {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   return (
     <ProjectsContainer
       initial="hidden"
       whileInView="visible"
       variants={containerVariants}
       viewport={{ once: true, margin: "-100px" }}
+      isMobile={isMobile}
     >
       
       <SectionTitle
@@ -286,6 +291,7 @@ const Projects = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
+        isMobile={isMobile}
       >
         My Projects
       </SectionTitle>
@@ -295,43 +301,46 @@ const Projects = () => {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         viewport={{ once: true }}
+        isMobile={isMobile}
       >
         Here are some of my featured projects. Each one was built to solve specific problems and showcase different aspects of my skills.
       </SectionSubtitle>
       
-      <ProjectsGrid>
+      <ProjectsGrid isMobile={isMobile}>
         {projects.map((project) => (
           <ProjectCard
             key={project.id}
             variants={itemVariants}
-            whileHover={{ y: -10 }}
+            whileHover={{ y: isMobile ? 0 : -10 }}
+            isMobile={isMobile}
           >
-            <ProjectImage>
+            <ProjectImage isMobile={isMobile}>
               {project.imageUrl ? (
                 <img src={project.imageUrl} alt={`${project.title} screenshot`} />
               ) : (
-                <Code style={{ fontSize: '4rem', color: 'rgba(255,255,255,0.2)' }} />
+                <Code style={{ fontSize: isMobile ? '3rem' : '4rem', color: 'rgba(255,255,255,0.2)' }} />
               )}
             </ProjectImage>
-            <ProjectContent>
-              <ProjectTitle>
+            <ProjectContent isMobile={isMobile}>
+              <ProjectTitle isMobile={isMobile}>
                 {project.title}
-                <span style={{ fontSize: '1.2rem', color: '#4fc3f7' }}>↗</span>
+                <span style={{ fontSize: isMobile ? '1rem' : '1.2rem', color: '#4fc3f7' }}>↗</span>
               </ProjectTitle>
-              <ProjectDescription>{project.description}</ProjectDescription>
-              <ProjectTags>
+              <ProjectDescription isMobile={isMobile}>{project.description}</ProjectDescription>
+              <ProjectTags isMobile={isMobile}>
                 {project.tags.map((tag, index) => (
-                  <Tag key={index}>{tag}</Tag>
+                  <Tag key={index} isMobile={isMobile}>{tag}</Tag>
                 ))}
               </ProjectTags>
-              <ProjectLinks>
+              <ProjectLinks isMobile={isMobile}>
                 <ProjectLink 
                   href={project.demoUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   variant="primary"
+                  isMobile={isMobile}
                 >
-                  <Visibility fontSize="small" />
+                  <Visibility fontSize={isMobile ? "small" : "medium"} />
                   Live Demo
                 </ProjectLink>
                 <ProjectLink 
@@ -339,8 +348,9 @@ const Projects = () => {
                   target="_blank" 
                   rel="noopener noreferrer"
                   variant="secondary"
+                  isMobile={isMobile}
                 >
-                  <GitHub fontSize="small" />
+                  <GitHub fontSize={isMobile ? "small" : "medium"} />
                   View Code
                 </ProjectLink>
               </ProjectLinks>
@@ -354,12 +364,14 @@ const Projects = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
         viewport={{ once: true }}
+        isMobile={isMobile}
       >
         <ViewMoreButton
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: isMobile ? 1 : 1.05 }}
           whileTap={{ scale: 0.95 }}
+          isMobile={isMobile}
         >
-          <OpenInNew fontSize="small" />
+          <OpenInNew fontSize={isMobile ? "small" : "medium"} />
           View More Projects
         </ViewMoreButton>
       </ViewMore>
