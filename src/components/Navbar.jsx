@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
-  Typography,
   Box,
   Link,
-  Button,
+  IconButton,
   useScrollTrigger,
   Slide,
-  IconButton,
   useTheme,
   useMediaQuery,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 function HideOnScroll({ children }) {
   const trigger = useScrollTrigger({ threshold: 50 });
@@ -28,49 +27,37 @@ function HideOnScroll({ children }) {
 const Navbar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const location = useLocation();
   const [activeLink, setActiveLink] = useState('home');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  // Update active link based on location
+  useEffect(() => {
+    const currentPath = location.pathname === '/' ? 'home' : location.pathname.slice(1);
+    setActiveLink(currentPath);
+    // Close mobile menu on route change
+    setMobileOpen(false);
+    // Scroll to top smoothly on route change
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location]);
+
+  // Scroll handler to set background & shadow
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setScrolled(scrollY > 50);
-
-      const sections = ['home', 'about', 'projects', 'contact'];
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const offsetTop = element.offsetTop - 100;
-          const offsetBottom = offsetTop + element.offsetHeight;
-          if (scrollY >= offsetTop && scrollY < offsetBottom) {
-            setActiveLink(section);
-            break;
-          }
-        }
-      }
+      setScrolled(window.scrollY > 50);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '/', },
-    { name: 'Projects', href: '/projects', },
-    { name: 'Contact', href: '/contact', },
+    { name: 'Home', href: '/' },
+    { name: 'Projects', href: '/projects' },
+    { name: 'Contact', href: '/contact' },
   ];
 
-  const handleLinkClick = (section) => {
-    setActiveLink(section);
-    setMobileOpen(false);
-    const element = document.getElementById(section);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const toggleMobileMenu = () => setMobileOpen(!mobileOpen);
+  const toggleMobileMenu = () => setMobileOpen((prev) => !prev);
 
   const navItemVariants = {
     hidden: { opacity: 0, y: -10 },
@@ -79,13 +66,13 @@ const Navbar = () => {
       y: 0,
       transition: {
         delay: i * 0.1,
-        duration: 0.5
-      }
+        duration: 0.5,
+      },
     }),
     hover: {
       scale: 1.05,
-      transition: { duration: 0.2 }
-    }
+      transition: { duration: 0.2 },
+    },
   };
 
   const mobileMenuVariants = {
@@ -95,15 +82,15 @@ const Navbar = () => {
       y: 0,
       transition: {
         duration: 0.3,
-        when: "beforeChildren",
-        staggerChildren: 0.1
-      }
+        when: 'beforeChildren',
+        staggerChildren: 0.1,
+      },
     },
     exit: {
       opacity: 0,
       y: -20,
-      transition: { duration: 0.2 }
-    }
+      transition: { duration: 0.2 },
+    },
   };
 
   return (
@@ -133,7 +120,13 @@ const Navbar = () => {
         >
           {/* Mobile Menu Toggle (Left) */}
           <Box sx={{ display: { xs: 'flex', md: 'none' }, zIndex: 2 }}>
-            <IconButton onClick={toggleMobileMenu} sx={{ color: '#fff' }}>
+            <IconButton
+              onClick={toggleMobileMenu}
+              sx={{ color: '#fff' }}
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-menu"
+            >
               {mobileOpen ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
           </Box>
@@ -158,11 +151,13 @@ const Navbar = () => {
                 whileHover="hover"
               >
                 <Link
-                  href={link.href}
+                  component={RouterLink}
+                  to={link.href}
                   underline="none"
-                  onClick={() => handleLinkClick(link.href.slice(1))}
                   sx={{
-                    color: activeLink === link.href.slice(1) ? '#1e90ff' : '#fff',
+                    color: activeLink === (link.href === '/' ? 'home' : link.href.slice(1))
+                      ? '#1e90ff'
+                      : '#fff',
                     fontWeight: 600,
                     fontSize: '1rem',
                     position: 'relative',
@@ -172,7 +167,9 @@ const Navbar = () => {
                       position: 'absolute',
                       bottom: '-6px',
                       left: 0,
-                      width: activeLink === link.href.slice(1) ? '100%' : '0',
+                      width: activeLink === (link.href === '/' ? 'home' : link.href.slice(1))
+                        ? '100%'
+                        : '0',
                       height: '3px',
                       background: 'linear-gradient(90deg, #1e90ff, #4da6ff)',
                       borderRadius: '2px',
@@ -191,15 +188,13 @@ const Navbar = () => {
               </motion.div>
             ))}
           </Box>
-
-          {/* CTA Button (Right) */}
-         
         </Toolbar>
 
         {/* Mobile Navigation */}
         <AnimatePresence>
           {mobileOpen && (
-            <motion.div
+            <motion.nav
+              id="mobile-menu"
               key="mobile-menu"
               variants={mobileMenuVariants}
               initial="hidden"
@@ -216,6 +211,7 @@ const Navbar = () => {
                 zIndex: 10,
                 borderTop: '1px solid rgba(30, 144, 255, 0.1)',
               }}
+              aria-label="Mobile navigation menu"
             >
               <Box
                 sx={{
@@ -228,13 +224,16 @@ const Navbar = () => {
                 {navLinks.map((link, i) => (
                   <motion.div key={link.href} custom={i} variants={navItemVariants}>
                     <Link
-                      href={link.href}
+                      component={RouterLink}
+                      to={link.href}
                       underline="none"
-                      onClick={() => handleLinkClick(link.href.slice(1))}
+                      onClick={() => setMobileOpen(false)}
                       sx={{
                         fontSize: '1.5rem',
                         fontWeight: 600,
-                        color: activeLink === link.href.slice(1) ? '#1e90ff' : '#fff',
+                        color: activeLink === (link.href === '/' ? 'home' : link.href.slice(1))
+                          ? '#1e90ff'
+                          : '#fff',
                         '&:hover': {
                           color: '#1e90ff',
                         },
@@ -244,10 +243,8 @@ const Navbar = () => {
                     </Link>
                   </motion.div>
                 ))}
-
-                
               </Box>
-            </motion.div>
+            </motion.nav>
           )}
         </AnimatePresence>
       </AppBar>
