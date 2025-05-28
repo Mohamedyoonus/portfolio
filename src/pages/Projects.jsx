@@ -231,24 +231,7 @@ const projects = [
     codeUrl: "https://github.com/Mohamedyoonus/chat_app",
     imageUrl: "./chat.png"
   },
-  {
-    id: 5,
-    title: "Empty Box",
-    description: "demo",
-    tags: ["demo"],
-    demoUrl: "https://shopy-olive.vercel.app/",
-    codeUrl: "https://github.com/Mohamedyoonus/E-com_Web",
-    imageUrl: "./shopy.png"
-  },
-  {
-    id: 6,
-    title: "Empty Box",
-    description: "demo",
-    tags: ["demo"],
-    demoUrl:"https://healthcare-management-system-gamma.vercel.app/",
-    codeUrl:  "https://github.com/Mohamedyoonus/Healthcare-Management-System",
-    imageUrl: "./medicare.png"
-  },
+  
 ];
 
 // Animation variants

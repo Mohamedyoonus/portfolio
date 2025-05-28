@@ -344,7 +344,7 @@ const Aboutme = () => {
               transition={{ delay: 0.3 }}
             >
               <Typography
-                variant="h2"
+                variant="h4"
                 sx={{
                   fontWeight: 800,
                   mb: 2,
